@@ -1,1 +1,558 @@
+<!DOCTYPE html>
 
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Sweet Ceremony Catering</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,600&family=Tenor+Sans&family=Jost:wght@200;300;400&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --cream:#FAF6EF;
+  --blush:#E8C5B0;
+  --rose:#C4826A;
+  --deep:#2E1F1C;
+  --gold:#C9A96E;
+  --champagne:#F5ECD7;
+  --muted:#8A6E66;
+  --silk:#F0E6DA;
+}
+html{scroll-behavior:smooth}
+body{background:var(--cream);color:var(--deep);font-family:'Jost',sans-serif;font-weight:300;overflow-x:hidden;cursor:none}
+
+/* CURSOR */
+.cursor{position:fixed;width:10px;height:10px;background:var(–rose);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .3s,height .3s,background .3s;mix-blend-mode:multiply}
+.cursor-ring{position:fixed;width:36px;height:36px;border:1px solid rgba(196,130,106,.5);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .4s,height .4s,border-color .3s}
+.cursor.hovering{width:16px;height:16px;background:var(–gold)}
+.cursor-ring.hovering{width:56px;height:56px;border-color:var(–gold)}
+
+/* CANVAS */
+#particle-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;opacity:.55}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:1.6rem 4rem;transition:background .6s,padding .4s,backdrop-filter .4s}
+nav.scrolled{background:rgba(250,246,239,.92);backdrop-filter:blur(16px);padding:1rem 4rem;border-bottom:1px solid rgba(196,130,106,.12)}
+.nav-logo{font-family:‘Cormorant Garamond’,serif;font-size:1.25rem;font-weight:500;letter-spacing:.06em;color:var(–deep);text-decoration:none;opacity:0;animation:logoReveal 1.2s .2s forwards}
+@keyframes logoReveal{from{opacity:0;letter-spacing:.3em}to{opacity:1;letter-spacing:.06em}}
+.nav-links{display:flex;gap:3rem;list-style:none}
+.nav-links a{font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;text-decoration:none;color:var(–muted);position:relative;padding-bottom:3px;transition:color .3s;opacity:0;animation:navIn .7s forwards}
+.nav-links li:nth-child(1) a{animation-delay:.5s}
+.nav-links li:nth-child(2) a{animation-delay:.65s}
+.nav-links li:nth-child(3) a{animation-delay:.8s}
+.nav-links li:nth-child(4) a{animation-delay:.95s}
+@keyframes navIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+.nav-links a::after{content:’’;position:absolute;bottom:0;left:0;width:0;height:1px;background:var(–rose);transition:width .4s cubic-bezier(.4,0,.2,1)}
+.nav-links a:hover{color:var(–rose)}
+.nav-links a:hover::after{width:100%}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:8rem 4rem 6rem;position:relative;overflow:hidden;z-index:1}
+.hero-bg-text{position:absolute;font-family:‘Cormorant Garamond’,serif;font-size:clamp(8rem,18vw,22rem);font-weight:600;color:transparent;-webkit-text-stroke:1px rgba(196,130,106,.07);line-height:1;pointer-events:none;top:50%;left:50%;transform:translate(-50%,-50%);white-space:nowrap;letter-spacing:.05em;animation:bgFloat 12s ease-in-out infinite}
+@keyframes bgFloat{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-52%) scale(1.02)}}
+.hero-ornament{display:flex;align-items:center;gap:1.5rem;margin-bottom:2rem;opacity:0;animation:fadeIn 1s .8s forwards}
+.ornament-line{width:60px;height:1px;background:linear-gradient(to right,transparent,var(–rose))}
+.ornament-line.right{background:linear-gradient(to left,transparent,var(–rose))}
+.ornament-text{font-size:.65rem;letter-spacing:.35em;text-transform:uppercase;color:var(–rose)}
+.hero-title{font-family:‘Cormorant Garamond’,serif;font-size:clamp(3.5rem,7vw,7.5rem);font-weight:300;line-height:1.06;color:var(–deep)}
+.hero-title .line{display:block;overflow:hidden}
+.hero-title .line-inner{display:block;transform:translateY(100%);animation:lineReveal 1s cubic-bezier(.16,1,.3,1) forwards}
+.hero-title .line:nth-child(1) .line-inner{animation-delay:.6s}
+.hero-title .line:nth-child(2) .line-inner{animation-delay:.8s}
+@keyframes lineReveal{to{transform:translateY(0)}}
+.hero-title em{font-style:italic;color:var(–rose)}
+.hero-sub{max-width:480px;margin:2.5rem auto 0;font-size:1rem;line-height:2;color:var(–muted);opacity:0;animation:fadeUp 1s 1.4s forwards}
+.hero-cta{margin-top:3.5rem;display:flex;gap:2rem;align-items:center;justify-content:center;opacity:0;animation:fadeUp 1s 1.7s forwards}
+.btn-primary{background:var(–rose);color:var(–cream);padding:1rem 2.8rem;font-family:‘Jost’,sans-serif;font-size:.7rem;font-weight:400;letter-spacing:.22em;text-transform:uppercase;text-decoration:none;border:none;cursor:none;position:relative;overflow:hidden;transition:transform .3s}
+.btn-primary::before{content:’’;position:absolute;inset:0;background:var(–deep);transform:translateX(-101%);transition:transform .5s cubic-bezier(.4,0,.2,1)}
+.btn-primary:hover::before{transform:translateX(0)}
+.btn-primary:hover{transform:translateY(-3px)}
+.btn-primary span{position:relative;z-index:1}
+.btn-ghost{font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(–deep);text-decoration:none;border-bottom:1px solid var(–blush);padding-bottom:3px;transition:color .3s,border-color .3s}
+.btn-ghost:hover{color:var(–rose);border-color:var(–rose)}
+.scroll-hint{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.7rem;opacity:0;animation:fadeIn 1s 2.2s forwards}
+.scroll-hint-text{font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;color:var(–muted)}
+.scroll-mouse{width:22px;height:34px;border:1px solid var(–blush);border-radius:12px;display:flex;justify-content:center;padding-top:6px}
+.scroll-dot{width:4px;height:7px;background:var(–rose);border-radius:2px;animation:scrollDot 1.8s ease-in-out infinite}
+@keyframes scrollDot{0%{transform:translateY(0);opacity:1}80%{transform:translateY(10px);opacity:0}100%{transform:translateY(0);opacity:0}}
+
+/* MARQUEE */
+.marquee-wrap{background:var(–deep);padding:1rem 0;overflow:hidden;position:relative;z-index:1}
+.marquee-inner{display:inline-flex;align-items:center;white-space:nowrap;animation:marquee 30s linear infinite}
+.marquee-inner span{font-size:.65rem;letter-spacing:.28em;text-transform:uppercase;color:rgba(250,246,239,.55);padding:0 2rem}
+.marquee-inner .gem{color:var(–gold);font-size:.45rem;vertical-align:middle;padding:0 .5rem}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(40px);transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-left{opacity:0;transform:translateX(-50px);transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1)}
+.reveal-left.visible{opacity:1;transform:translateX(0)}
+.reveal-right{opacity:0;transform:translateX(50px);transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1)}
+.reveal-right.visible{opacity:1;transform:translateX(0)}
+.reveal-scale{opacity:0;transform:scale(.9);transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1)}
+.reveal-scale.visible{opacity:1;transform:scale(1)}
+.d1{transition-delay:.05s}.d2{transition-delay:.15s}.d3{transition-delay:.25s}.d4{transition-delay:.35s}.d5{transition-delay:.45s}
+
+/* SECTION COMMON */
+.section-label{display:inline-block;font-size:.65rem;letter-spacing:.32em;text-transform:uppercase;color:var(–rose);margin-bottom:1.4rem}
+.section-heading{font-family:‘Cormorant Garamond’,serif;font-size:clamp(2.2rem,3.8vw,3.8rem);font-weight:300;line-height:1.15;color:var(–deep)}
+.section-heading em{font-style:italic;color:var(–rose)}
+
+/* INTRO */
+.intro{padding:9rem 6rem;display:grid;grid-template-columns:1fr 1fr;gap:8rem;align-items:center;position:relative;z-index:1}
+.intro::before{content:’’;position:absolute;right:0;top:0;bottom:0;width:42%;background:linear-gradient(to left,var(–silk),transparent);pointer-events:none}
+.intro-deco{position:absolute;left:47%;top:50%;transform:translate(-50%,-50%);font-family:‘Cormorant Garamond’,serif;font-size:20rem;font-weight:600;color:transparent;-webkit-text-stroke:1px rgba(232,197,176,.1);pointer-events:none;line-height:1;animation:bgFloat 15s ease-in-out infinite reverse}
+.intro-right p{font-size:.95rem;line-height:2.1;color:var(–muted);margin-bottom:1.6rem}
+.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:3rem;padding-top:2.5rem;border-top:1px solid var(–blush)}
+.stat-num{font-family:‘Cormorant Garamond’,serif;font-size:3rem;font-weight:300;color:var(–rose);line-height:1;transition:transform .4s cubic-bezier(.16,1,.3,1)}
+.stat-item:hover .stat-num{transform:scale(1.08) translateY(-2px)}
+.stat-label{font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:var(–muted);margin-top:.5rem}
+.stat-num[data-count]{opacity:0;transition:opacity .5s}
+.stat-num[data-count].counted{opacity:1}
+
+/* DIVIDER */
+.divider{display:flex;align-items:center;justify-content:center;gap:2rem;padding:1.5rem 0;position:relative;z-index:1}
+.divider-line{flex:1;max-width:200px;height:1px;background:linear-gradient(to right,transparent,var(–blush))}
+.divider-line.right{background:linear-gradient(to left,transparent,var(–blush))}
+.divider-gem{color:var(–gold);font-size:.7rem;animation:spin 20s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* MENU */
+.menu-section{background:var(–deep);padding:9rem 6rem;position:relative;overflow:hidden;z-index:1}
+.menu-section::before{content:’’;position:absolute;inset:0;background:radial-gradient(ellipse at 80% 20%,rgba(196,130,106,.08),transparent 60%),radial-gradient(ellipse at 20% 80%,rgba(201,169,110,.06),transparent 50%)}
+.menu-header{text-align:center;margin-bottom:5rem}
+.menu-header .section-label{color:var(–blush)}
+.menu-header .section-heading{color:var(–cream)}
+.menu-header .section-heading em{color:var(–gold)}
+.menu-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;position:relative;z-index:1}
+.menu-card{background:rgba(255,255,255,.03);padding:3rem 2.5rem;border:1px solid rgba(201,169,110,.08);position:relative;overflow:hidden;cursor:none;transition:transform .5s cubic-bezier(.16,1,.3,1),background .4s,border-color .4s}
+.menu-card::before{content:’’;position:absolute;inset:0;background:linear-gradient(135deg,rgba(201,169,110,.05),transparent);opacity:0;transition:opacity .5s}
+.menu-card::after{content:’’;position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(to right,var(–gold),var(–rose));transform:scaleX(0);transform-origin:left;transition:transform .6s cubic-bezier(.16,1,.3,1)}
+.menu-card:hover{transform:translateY(-8px) scale(1.01);background:rgba(255,255,255,.06);border-color:rgba(201,169,110,.2)}
+.menu-card:hover::before{opacity:1}
+.menu-card:hover::after{transform:scaleX(1)}
+.menu-card:hover .menu-icon{transform:scale(1.2) rotate(8deg)}
+.menu-icon{font-size:2.8rem;margin-bottom:1.8rem;display:inline-block;transition:transform .5s cubic-bezier(.34,1.56,.64,1)}
+.menu-card-title{font-family:‘Cormorant Garamond’,serif;font-size:1.7rem;font-weight:400;color:var(–cream);margin-bottom:.9rem}
+.menu-card-desc{font-size:.84rem;line-height:1.9;color:rgba(250,246,239,.45)}
+.menu-items-list{margin-top:1.8rem;list-style:none}
+.menu-items-list li{font-size:.76rem;color:var(–gold);letter-spacing:.1em;padding:.45rem 0;border-bottom:1px solid rgba(201,169,110,.1);display:flex;align-items:center;gap:.6rem;transition:letter-spacing .3s}
+.menu-items-list li::before{content:‘◇’;font-size:.4rem;opacity:.6}
+.menu-card:hover .menu-items-list li{letter-spacing:.15em}
+
+/* FEATURED */
+.featured-banner{background:var(–rose);padding:5rem 6rem;display:grid;grid-template-columns:1fr auto;gap:4rem;align-items:center;position:relative;overflow:hidden;z-index:1}
+.featured-banner::before{content:’’;position:absolute;right:-10%;top:-50%;width:500px;height:500px;border:1px solid rgba(250,246,239,.1);border-radius:50%;animation:ringPulse 4s ease-in-out infinite}
+.featured-banner::after{content:’’;position:absolute;right:-5%;top:-30%;width:350px;height:350px;border:1px solid rgba(250,246,239,.15);border-radius:50%;animation:ringPulse 4s 1s ease-in-out infinite}
+@keyframes ringPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.05);opacity:.6}}
+.featured-text .section-label{color:rgba(250,246,239,.7)}
+.featured-heading{font-family:‘Cormorant Garamond’,serif;font-size:clamp(2rem,4vw,3.5rem);font-weight:300;color:var(–cream);line-height:1.2}
+.featured-heading em{font-style:italic}
+.featured-btn{background:var(–cream);color:var(–rose);padding:1.1rem 3rem;white-space:nowrap;font-family:‘Jost’,sans-serif;font-size:.7rem;font-weight:400;letter-spacing:.22em;text-transform:uppercase;text-decoration:none;border:none;cursor:none;transition:background .3s,color .3s,transform .3s;flex-shrink:0;position:relative;z-index:1}
+.featured-btn:hover{background:var(–deep);color:var(–cream);transform:translateY(-3px)}
+
+/* PROCESS */
+.process-section{padding:9rem 6rem;background:var(–silk);position:relative;overflow:hidden;z-index:1}
+.process-section::before{content:‘04’;position:absolute;right:-1rem;bottom:-3rem;font-family:‘Cormorant Garamond’,serif;font-size:22rem;font-weight:600;color:transparent;-webkit-text-stroke:1px rgba(196,130,106,.06);line-height:1;pointer-events:none}
+.process-header{text-align:center;margin-bottom:6rem}
+.process-steps{display:grid;grid-template-columns:repeat(4,1fr);position:relative}
+.process-connector{position:absolute;top:2.5rem;left:12%;right:12%;height:1px;background:linear-gradient(to right,transparent,var(–blush) 20%,var(–blush) 80%,transparent);overflow:hidden}
+.process-connector::after{content:’’;position:absolute;top:0;left:-10%;width:60px;height:100%;background:linear-gradient(to right,transparent,var(–rose),transparent);animation:connFlow 3s ease-in-out infinite}
+@keyframes connFlow{from{left:-10%}to{left:110%}}
+.process-step{text-align:center;padding:0 2rem}
+.step-num{width:5rem;height:5rem;border-radius:50%;background:var(–cream);border:1px solid var(–blush);display:flex;align-items:center;justify-content:center;margin:0 auto 2rem;font-family:‘Cormorant Garamond’,serif;font-size:1.6rem;color:var(–rose);position:relative;z-index:1;transition:transform .5s cubic-bezier(.34,1.56,.64,1),background .4s,border-color .4s,color .4s}
+.process-step:hover .step-num{transform:scale(1.15) rotate(10deg);background:var(–rose);border-color:var(–rose);color:var(–cream)}
+.step-title{font-family:‘Cormorant Garamond’,serif;font-size:1.4rem;color:var(–deep);margin-bottom:.9rem}
+.step-desc{font-size:.82rem;line-height:2;color:var(–muted)}
+
+/* TESTIMONIALS */
+.testimonials{padding:9rem 6rem;background:var(–cream);position:relative;z-index:1;overflow:hidden}
+.testimonials::before{content:’”’;position:absolute;top:-3rem;left:3rem;font-family:‘Cormorant Garamond’,serif;font-size:30rem;font-weight:600;color:rgba(232,197,176,.18);line-height:1;pointer-events:none}
+.testimonials-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:4rem}
+.testimonials-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem}
+.testimonial-card{background:var(–silk);padding:2.8rem;position:relative;overflow:hidden;transition:transform .5s cubic-bezier(.16,1,.3,1),box-shadow .5s}
+.testimonial-card::before{content:’’;position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(to bottom,var(–blush),var(–rose));transform:scaleY(0);transform-origin:top;transition:transform .5s cubic-bezier(.16,1,.3,1)}
+.testimonial-card:hover{transform:translateY(-8px);box-shadow:0 20px 60px rgba(59,42,40,.1)}
+.testimonial-card:hover::before{transform:scaleY(1)}
+.stars{color:var(–gold);margin-bottom:1.2rem;letter-spacing:.2em;font-size:.75rem}
+.testimonial-quote{font-family:‘Cormorant Garamond’,serif;font-size:1.1rem;font-style:italic;line-height:1.95;color:var(–deep);margin-bottom:1.8rem}
+.testimonial-author{font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(–rose)}
+.testimonial-event{font-size:.72rem;color:var(–muted);margin-top:.3rem}
+
+/* GALLERY */
+.gallery-strip{display:grid;grid-template-columns:repeat(5,1fr);height:300px;position:relative;z-index:1;overflow:hidden}
+.gallery-cell{display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;cursor:none;transition:flex .7s cubic-bezier(.16,1,.3,1)}
+.gallery-cell:hover{flex:2.5}
+.gallery-cell::after{content:’’;position:absolute;inset:0;background:linear-gradient(135deg,rgba(196,130,106,.2),rgba(201,169,110,.1));opacity:0;transition:opacity .5s}
+.gallery-cell:hover::after{opacity:1}
+.gallery-cell:nth-child(1){background:#EFE0D5}
+.gallery-cell:nth-child(2){background:#F5ECD7}
+.gallery-cell:nth-child(3){background:#EDE0E0}
+.gallery-cell:nth-child(4){background:#E8DECE}
+.gallery-cell:nth-child(5){background:#F0E2DA}
+.gallery-label{position:absolute;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(20px);font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(–deep);white-space:nowrap;opacity:0;transition:opacity .4s,transform .4s}
+.gallery-cell:hover .gallery-label{opacity:1;transform:translateX(-50%) translateY(0)}
+.gallery-emoji{font-size:5rem;filter:drop-shadow(0 12px 30px rgba(59,42,40,.15));transition:transform .6s cubic-bezier(.34,1.56,.64,1);position:relative;z-index:1}
+.gallery-cell:hover .gallery-emoji{transform:scale(1.2) rotate(-5deg) translateY(-8px)}
+
+/* CONTACT */
+.contact-section{background:var(–deep);padding:9rem 6rem;display:grid;grid-template-columns:1fr 1.1fr;gap:8rem;align-items:start;position:relative;overflow:hidden;z-index:1}
+.contact-section::before{content:’’;position:absolute;inset:0;background:radial-gradient(ellipse at 0% 100%,rgba(196,130,106,.07),transparent 50%),radial-gradient(ellipse at 100% 0%,rgba(201,169,110,.05),transparent 50%)}
+.contact-left .section-label{color:var(–blush)}
+.contact-left h2{font-family:‘Cormorant Garamond’,serif;font-size:clamp(2.5rem,4vw,4.2rem);font-weight:300;color:var(–cream);line-height:1.15;margin-bottom:1.8rem}
+.contact-left h2 em{font-style:italic;color:var(–gold)}
+.contact-left p{font-size:.9rem;line-height:2.1;color:rgba(250,246,239,.5);margin-bottom:3rem}
+.contact-detail{display:flex;gap:1.2rem;align-items:center;margin-bottom:1.2rem;transition:transform .3s}
+.contact-detail:hover{transform:translateX(6px)}
+.contact-detail-icon{width:2.4rem;height:2.4rem;border:1px solid rgba(201,169,110,.3);display:flex;align-items:center;justify-content:center;color:var(–gold);font-size:.85rem;flex-shrink:0;transition:background .3s,border-color .3s}
+.contact-detail:hover .contact-detail-icon{background:rgba(201,169,110,.15);border-color:var(–gold)}
+.contact-detail-text{font-size:.85rem;color:rgba(250,246,239,.65)}
+.contact-form{display:flex;flex-direction:column;gap:1.4rem;position:relative;z-index:1}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1.4rem}
+.form-group{display:flex;flex-direction:column;gap:.55rem}
+.form-group label{font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(250,246,239,.4)}
+.form-group input,.form-group select,.form-group textarea{background:rgba(255,255,255,.04);border:1px solid rgba(201,169,110,.15);padding:1rem 1.1rem;color:var(–cream);font-family:‘Jost’,sans-serif;font-size:.88rem;font-weight:300;outline:none;transition:border-color .4s,background .4s;appearance:none}
+.form-group input::placeholder,.form-group textarea::placeholder{color:rgba(250,246,239,.25)}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(–gold);background:rgba(255,255,255,.07)}
+.form-group select option{background:#2E1F1C;color:var(–cream)}
+.form-group textarea{resize:none;height:120px}
+.btn-submit{background:transparent;color:var(–gold);padding:1rem 2.5rem;font-family:‘Jost’,sans-serif;font-size:.7rem;font-weight:400;letter-spacing:.22em;text-transform:uppercase;border:1px solid rgba(201,169,110,.4);cursor:none;position:relative;overflow:hidden;align-self:flex-start;transition:color .4s,transform .3s}
+.btn-submit::before{content:’’;position:absolute;inset:0;background:var(–gold);transform:translateY(101%);transition:transform .5s cubic-bezier(.16,1,.3,1)}
+.btn-submit:hover{color:var(–deep);transform:translateY(-3px)}
+.btn-submit:hover::before{transform:translateY(0)}
+.btn-submit span{position:relative;z-index:1}
+
+/* FOOTER */
+footer{background:#1A110E;padding:3.5rem 6rem;display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(201,169,110,.08);position:relative;z-index:1}
+.footer-logo{font-family:‘Cormorant Garamond’,serif;font-size:1.4rem;font-weight:400;color:var(–cream)}
+.footer-logo span{display:block;font-size:.6rem;letter-spacing:.35em;text-transform:uppercase;color:var(–gold);font-family:‘Jost’,sans-serif;font-weight:300;margin-top:.3rem}
+.footer-copy{font-size:.72rem;color:rgba(250,246,239,.25);letter-spacing:.05em}
+.footer-social{display:flex;gap:2rem}
+.footer-social a{font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(250,246,239,.35);text-decoration:none;transition:color .3s,letter-spacing .3s}
+.footer-social a:hover{color:var(–gold);letter-spacing:.3em}
+
+/* LOADER */
+.loader{position:fixed;inset:0;background:var(–deep);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .8s ease,transform .8s ease}
+.loader.done{opacity:0;pointer-events:none;transform:scale(1.02)}
+.loader-text{font-family:‘Cormorant Garamond’,serif;font-size:2rem;font-weight:300;color:var(–cream);letter-spacing:.3em;text-transform:uppercase;overflow:hidden}
+.loader-text span{display:inline-block;transform:translateY(100%);animation:loaderChar .6s cubic-bezier(.16,1,.3,1) forwards}
+@keyframes loaderChar{to{transform:translateY(0)}}
+.loader-bar{width:120px;height:1px;background:rgba(250,246,239,.15);margin-top:2rem;overflow:hidden}
+.loader-fill{height:100%;background:linear-gradient(to right,var(–rose),var(–gold));width:0;animation:loaderBar 1.8s ease forwards}
+@keyframes loaderBar{to{width:100%}}
+.loader-sub{font-size:.62rem;letter-spacing:.35em;text-transform:uppercase;color:var(–gold);margin-top:1rem;opacity:0;animation:fadeIn .5s .8s forwards}
+
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+/* RESPONSIVE */
+@media(max-width:960px){
+body{cursor:auto}
+.cursor,.cursor-ring{display:none}
+nav{padding:1.2rem 2rem}
+.nav-links{display:none}
+.hero{padding:7rem 2rem 5rem}
+.intro{grid-template-columns:1fr;gap:3rem;padding:6rem 2rem}
+.menu-section,.process-section,.testimonials,.contact-section{padding:6rem 2rem}
+.menu-grid,.testimonials-grid{grid-template-columns:1fr}
+.process-steps{grid-template-columns:1fr 1fr;row-gap:3rem}
+.process-connector{display:none}
+.contact-section{grid-template-columns:1fr;gap:4rem}
+.form-row{grid-template-columns:1fr}
+.gallery-strip{height:180px}
+footer{flex-direction:column;gap:1.5rem;text-align:center;padding:2.5rem 2rem}
+.featured-banner{grid-template-columns:1fr;padding:4rem 2rem}
+}
+</style>
+
+</head>
+<body>
+
+<!-- LOADER -->
+
+<div class="loader" id="loader">
+  <div class="loader-text">
+    <span style="animation-delay:.0s">S</span><span style="animation-delay:.05s">w</span><span style="animation-delay:.1s">e</span><span style="animation-delay:.15s">e</span><span style="animation-delay:.2s">t</span>&nbsp;<span style="animation-delay:.32s">C</span><span style="animation-delay:.37s">e</span><span style="animation-delay:.42s">r</span><span style="animation-delay:.47s">e</span><span style="animation-delay:.52s">m</span><span style="animation-delay:.57s">o</span><span style="animation-delay:.62s">n</span><span style="animation-delay:.67s">y</span>
+  </div>
+  <div class="loader-sub">Artisan Dessert Catering</div>
+  <div class="loader-bar"><div class="loader-fill"></div></div>
+</div>
+
+<!-- CURSOR -->
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- CANVAS PARTICLES -->
+
+<canvas id="particle-canvas"></canvas>
+
+<!-- NAV -->
+
+<nav id="navbar">
+  <a class="nav-logo" href="#">Sweet Ceremony</a>
+  <ul class="nav-links">
+    <li><a href="#menu">Menu</a></li>
+    <li><a href="#process">Process</a></li>
+    <li><a href="#stories">Stories</a></li>
+    <li><a href="#contact">Enquire</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+
+<section class="hero" id="home">
+  <div class="hero-bg-text">SWEET</div>
+  <div class="hero-ornament">
+    <div class="ornament-line"></div>
+    <span class="ornament-text">Est. 2012 &middot; Artisan Catering</span>
+    <div class="ornament-line right"></div>
+  </div>
+  <h1 class="hero-title">
+    <span class="line"><span class="line-inner">Every bite,</span></span>
+    <span class="line"><span class="line-inner">a <em>ceremony</em>.</span></span>
+  </h1>
+  <p class="hero-sub">Handcrafted dessert experiences for weddings, galas, and celebrations that deserve something truly unforgettable.</p>
+  <div class="hero-cta">
+    <a href="#contact" class="btn-primary"><span>Plan Your Event</span></a>
+    <a href="#menu" class="btn-ghost">Explore the Menu</a>
+  </div>
+  <div class="scroll-hint">
+    <span class="scroll-hint-text">Scroll</span>
+    <div class="scroll-mouse"><div class="scroll-dot"></div></div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+
+<div class="marquee-wrap">
+  <div class="marquee-inner">
+    <span>Wedding Cakes</span><span class="gem">&#9670;</span>
+    <span>Dessert Tables</span><span class="gem">&#9670;</span>
+    <span>French Macarons</span><span class="gem">&#9670;</span>
+    <span>Chocolate Towers</span><span class="gem">&#9670;</span>
+    <span>Custom P&acirc;tisserie</span><span class="gem">&#9670;</span>
+    <span>Grazing Boards</span><span class="gem">&#9670;</span>
+    <span>Bespoke Favors</span><span class="gem">&#9670;</span>
+    <span>Choux &amp; Tarts</span><span class="gem">&#9670;</span>
+    <span>Wedding Cakes</span><span class="gem">&#9670;</span>
+    <span>Dessert Tables</span><span class="gem">&#9670;</span>
+    <span>French Macarons</span><span class="gem">&#9670;</span>
+    <span>Chocolate Towers</span><span class="gem">&#9670;</span>
+    <span>Custom P&acirc;tisserie</span><span class="gem">&#9670;</span>
+    <span>Grazing Boards</span><span class="gem">&#9670;</span>
+    <span>Bespoke Favors</span><span class="gem">&#9670;</span>
+    <span>Choux &amp; Tarts</span><span class="gem">&#9670;</span>
+  </div>
+</div>
+
+<!-- INTRO -->
+
+<section class="intro" id="about">
+  <div class="intro-deco">S</div>
+  <div>
+    <p class="section-label reveal-left">Our Craft</p>
+    <h2 class="section-heading reveal-left d1">Where sugar<br>becomes <em>artistry</em></h2>
+  </div>
+  <div class="intro-right">
+    <p class="reveal d1">Sweet Ceremony Catering was born from a simple belief: dessert is the emotional crescendo of any celebration. We create lavish, entirely bespoke sweet experiences &mdash; from towering wedding cakes to elaborate dessert tablescapes &mdash; each one as unique as the occasion it graces.</p>
+    <p class="reveal d2">Our pastry team draws on classical French technique and contemporary artistry, using the finest seasonal ingredients sourced from local farms and specialty purveyors. No two events are ever the same.</p>
+    <div class="stat-row">
+      <div class="stat-item reveal d2"><div class="stat-num" data-count="650">0</div><div class="stat-label">Events Served</div></div>
+      <div class="stat-item reveal d3"><div class="stat-num" data-count="12">0</div><div class="stat-label">Years of Craft</div></div>
+      <div class="stat-item reveal d4"><div class="stat-num" data-count="100">0</div><div class="stat-label">% Custom</div></div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><div class="divider-line"></div><div class="divider-gem">&#10022;</div><div class="divider-line right"></div></div>
+
+<!-- MENU -->
+
+<section class="menu-section" id="menu">
+  <div class="menu-header">
+    <p class="section-label reveal">Our Offerings</p>
+    <h2 class="section-heading reveal d1">Indulge in the <em>extraordinary</em></h2>
+  </div>
+  <div class="menu-grid">
+    <div class="menu-card reveal d1"><div class="menu-icon">&#127874;</div><h3 class="menu-card-title">Wedding Cakes</h3><p class="menu-card-desc">Sculptural masterpieces designed to mirror your love story. Each tier crafted with intention and devotion.</p><ul class="menu-items-list"><li>Classic Tiered Cakes</li><li>Naked &amp; Semi-Naked</li><li>Fondant Sculptures</li><li>Fresh Flower Adorned</li></ul></div>
+    <div class="menu-card reveal d2"><div class="menu-icon">&#129361;</div><h3 class="menu-card-title">Dessert Tables</h3><p class="menu-card-desc">Abundant, styled tablescapes brimming with twenty or more handmade sweets, themed to perfection.</p><ul class="menu-items-list"><li>French Macarons</li><li>Petits Fours &amp; Mignardises</li><li>Mini Tarts &amp; &Eacute;clairs</li><li>Seasonal Confections</li></ul></div>
+    <div class="menu-card reveal d3"><div class="menu-icon">&#127851;</div><h3 class="menu-card-title">Chocolate Bars</h3><p class="menu-card-desc">Live chocolate stations and bespoke bonbon collections. Theater meets taste in the most indulgent way.</p><ul class="menu-items-list"><li>Bean-to-Bar Truffles</li><li>Dipped Fruit Platters</li><li>Fondue Fountains</li><li>Custom Bon Bons</li></ul></div>
+    <div class="menu-card reveal d1"><div class="menu-icon">&#129312;</div><h3 class="menu-card-title">P&acirc;tisserie</h3><p class="menu-card-desc">Viennoiserie and fine French pastry delivered fresh the morning of your event.</p><ul class="menu-items-list"><li>Croissants &amp; Pain au Choc</li><li>Choux &amp; Paris-Brest</li><li>Mille-Feuille</li><li>Opera &amp; Entremet</li></ul></div>
+    <div class="menu-card reveal d2"><div class="menu-icon">&#127827;</div><h3 class="menu-card-title">Grazing Boards</h3><p class="menu-card-desc">Curated sweet grazing boards that double as a styled centerpiece for your reception or cocktail hour.</p><ul class="menu-items-list"><li>Dessert Charcuterie</li><li>Chocolate &amp; Fruit Boards</li><li>Cookie &amp; Brownie Platters</li><li>Candy &amp; Confection</li></ul></div>
+    <div class="menu-card reveal d3"><div class="menu-icon">&#127873;</div><h3 class="menu-card-title">Favors &amp; Gifts</h3><p class="menu-card-desc">Individually wrapped, branded, or ribbon-tied take-home sweets your guests will treasure long after.</p><ul class="menu-items-list"><li>Custom Macaron Boxes</li><li>Monogrammed Shortbread</li><li>Honey &amp; Jam Jars</li><li>Bespoke Candy Bags</li></ul></div>
+  </div>
+</section>
+
+<!-- GALLERY STRIP -->
+
+<div class="gallery-strip">
+  <div class="gallery-cell reveal-scale d1"><div class="gallery-emoji">&#127874;</div><span class="gallery-label">Wedding Cakes</span></div>
+  <div class="gallery-cell reveal-scale d2"><div class="gallery-emoji">&#127854;</div><span class="gallery-label">Cr&egrave;me Br&ucirc;l&eacute;e</span></div>
+  <div class="gallery-cell reveal-scale d3"><div class="gallery-emoji">&#129383;</div><span class="gallery-label">Tarts &amp; Pies</span></div>
+  <div class="gallery-cell reveal-scale d4"><div class="gallery-emoji">&#127851;</div><span class="gallery-label">Chocolate</span></div>
+  <div class="gallery-cell reveal-scale d5"><div class="gallery-emoji">&#129361;</div><span class="gallery-label">Cupcakes</span></div>
+</div>
+
+<!-- FEATURED -->
+
+<div class="featured-banner">
+  <div class="featured-text reveal-left">
+    <p class="section-label">Signature Experience</p>
+    <h2 class="featured-heading">The <em>Grand Dessert</em><br>Ceremony Table</h2>
+  </div>
+  <a href="#contact" class="featured-btn reveal-right">Book Yours &rarr;</a>
+</div>
+
+<!-- PROCESS -->
+
+<section class="process-section" id="process">
+  <div class="process-header">
+    <span class="section-label reveal">The Journey</span>
+    <h2 class="section-heading reveal d1">From <em>vision</em> to table</h2>
+  </div>
+  <div class="process-steps">
+    <div class="process-connector"></div>
+    <div class="process-step reveal d1"><div class="step-num">01</div><h3 class="step-title">Consultation</h3><p class="step-desc">We listen deeply to your story, aesthetic vision, and flavor dreams to understand exactly what your event calls for.</p></div>
+    <div class="process-step reveal d2"><div class="step-num">02</div><h3 class="step-title">Tasting</h3><p class="step-desc">A private tasting session where we guide you through seasonal flavors, textures, and design possibilities.</p></div>
+    <div class="process-step reveal d3"><div class="step-num">03</div><h3 class="step-title">Creation</h3><p class="step-desc">Every element is handcrafted in our kitchen with obsessive care, from pulled sugar to hand-piped florals.</p></div>
+    <div class="process-step reveal d4"><div class="step-num">04</div><h3 class="step-title">Delivery</h3><p class="step-desc">We arrive early, style the display, and stay through service to ensure every guest's experience is flawless.</p></div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+
+<section class="testimonials" id="stories">
+  <div class="testimonials-header">
+    <div>
+      <span class="section-label reveal">Kind Words</span>
+      <h2 class="section-heading reveal d1">Moments we've <em>sweetened</em></h2>
+    </div>
+  </div>
+  <div class="testimonials-grid">
+    <div class="testimonial-card reveal d1"><div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><p class="testimonial-quote">"The dessert table was the most talked-about element of our entire wedding. Guests are still messaging us about the lavender macarons."</p><div class="testimonial-author">Isabelle &amp; Thomas</div><div class="testimonial-event">Garden Wedding &middot; June 2025</div></div>
+    <div class="testimonial-card reveal d2"><div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><p class="testimonial-quote">"Sweet Ceremony transformed our corporate gala into something utterly magical. The chocolate tower was beyond anything we imagined."</p><div class="testimonial-author">Claire Montrose</div><div class="testimonial-event">Annual Gala &middot; November 2025</div></div>
+    <div class="testimonial-card reveal d3"><div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><p class="testimonial-quote">"Booking Sweet Ceremony was the best decision we made. The custom cake brought tears to her eyes. Absolutely extraordinary work."</p><div class="testimonial-author">The Hartley Family</div><div class="testimonial-event">Sweet Sixteen &middot; March 2026</div></div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+
+<section class="contact-section" id="contact">
+  <div class="contact-left">
+    <span class="section-label reveal">Let's Create Together</span>
+    <h2 class="reveal d1">Begin your<br><em>sweet</em> story</h2>
+    <p class="reveal d2">Every extraordinary dessert experience starts with a conversation. Tell us about your event and let us craft something remarkable.</p>
+    <div class="contact-detail reveal d2"><div class="contact-detail-icon">&#9993;</div><span class="contact-detail-text">hello@sweetceremony.com</span></div>
+    <div class="contact-detail reveal d3"><div class="contact-detail-icon">&#9742;</div><span class="contact-detail-text">(555) 012-3456</span></div>
+    <div class="contact-detail reveal d4"><div class="contact-detail-icon">&#9711;</div><span class="contact-detail-text">Studio open by appointment</span></div>
+  </div>
+  <form class="contact-form reveal-right" onsubmit="handleSubmit(event)">
+    <div class="form-row">
+      <div class="form-group"><label>Your Name</label><input type="text" placeholder="Full name"/></div>
+      <div class="form-group"><label>Email Address</label><input type="email" placeholder="you@email.com"/></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Event Type</label><select><option value="">Select event type</option><option>Wedding</option><option>Corporate Event</option><option>Birthday Celebration</option><option>Engagement Party</option><option>Baby Shower</option><option>Other</option></select></div>
+      <div class="form-group"><label>Event Date</label><input type="date"/></div>
+    </div>
+    <div class="form-group"><label>Estimated Guest Count</label><input type="text" placeholder="e.g. 80&ndash;120 guests"/></div>
+    <div class="form-group"><label>Tell Us Your Vision</label><textarea placeholder="Share your ideas, themes, and any must-have treats&hellip;"></textarea></div>
+    <button type="submit" class="btn-submit"><span>Send Enquiry &rarr;</span></button>
+  </form>
+</section>
+
+<footer>
+  <div class="footer-logo">Sweet Ceremony<span>Artisan Dessert Catering</span></div>
+  <p class="footer-copy">&copy; 2026 Sweet Ceremony Catering. All rights reserved.</p>
+  <nav class="footer-social"><a href="#">Instagram</a><a href="#">Pinterest</a><a href="#">Facebook</a></nav>
+</footer>
+
+<script>
+// LOADER
+window.addEventListener('load',()=>{setTimeout(()=>{document.getElementById('loader').classList.add('done')},2000)});
+
+// CUSTOM CURSOR
+const cursor=document.getElementById('cursor');
+const ring=document.getElementById('cursorRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX;my=e.clientY;
+  cursor.style.left=mx+'px';cursor.style.top=my+'px';
+});
+(function animRing(){
+  rx+=(mx-rx)*.12;ry+=(my-ry)*.12;
+  ring.style.left=rx+'px';ring.style.top=ry+'px';
+  requestAnimationFrame(animRing);
+})();
+document.querySelectorAll('a,button,.menu-card,.gallery-cell,.testimonial-card,.process-step,.contact-detail').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cursor.classList.add('hovering');ring.classList.add('hovering')});
+  el.addEventListener('mouseleave',()=>{cursor.classList.remove('hovering');ring.classList.remove('hovering')});
+});
+
+// PARTICLES
+const canvas=document.getElementById('particle-canvas');
+const ctx=canvas.getContext('2d');
+let W,H;
+const resize=()=>{W=canvas.width=innerWidth;H=canvas.height=innerHeight};
+resize();addEventListener('resize',resize);
+class P{
+  constructor(){this.reset(true)}
+  reset(init){
+    this.x=Math.random()*W;
+    this.y=init?Math.random()*H:H+10;
+    this.vx=(Math.random()-.5)*.35;
+    this.vy=-(Math.random()*.5+.15);
+    this.r=Math.random()*1.8+.4;
+    this.alpha=Math.random()*.5+.1;
+    this.decay=Math.random()*.004+.001;
+    this.c=Math.random()>.5?'196,130,106':'201,169,110';
+  }
+  update(){
+    this.x+=this.vx;this.y+=this.vy;this.alpha-=this.decay;
+    if(this.alpha<=0||this.y<-10)this.reset(false);
+  }
+  draw(){
+    ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);
+    ctx.fillStyle=`rgba(${this.c},${this.alpha})`;ctx.fill();
+  }
+}
+const particles=Array.from({length:90},()=>new P());
+(function anim(){ctx.clearRect(0,0,W,H);particles.forEach(p=>{p.update();p.draw()});requestAnimationFrame(anim)})();
+
+// NAV SCROLL
+addEventListener('scroll',()=>{document.getElementById('navbar').classList.toggle('scrolled',scrollY>60)});
+
+// REVEAL
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target)}});
+},{threshold:.08});
+document.querySelectorAll('.reveal,.reveal-left,.reveal-right,.reveal-scale').forEach(el=>obs.observe(el));
+
+// COUNT-UP
+function countUp(el){
+  const target=+el.dataset.count;let v=0;
+  el.classList.add('counted');
+  const t=setInterval(()=>{
+    v=Math.min(v+target/90,target);
+    el.textContent=Math.floor(v)+(v>=target&&el.dataset.suffix||'');
+    if(v>=target)clearInterval(t);
+  },18);
+}
+const co=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting&&!e.target.classList.contains('counted')){countUp(e.target);co.unobserve(e.target)}});
+},{threshold:.5});
+document.querySelectorAll('.stat-num[data-count]').forEach(el=>co.observe(el));
+
+// FORM
+function handleSubmit(e){
+  e.preventDefault();
+  const s=e.target.querySelector('.btn-submit');
+  s.querySelector('span').textContent='Sent with Love \u2726';
+  s.style.cssText+='border-color:var(--gold);background:var(--gold);color:var(--deep)';
+}
+</script>
+
+</body>
+</html>
