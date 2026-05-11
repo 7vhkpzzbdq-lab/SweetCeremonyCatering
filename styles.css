@@ -403,7 +403,15 @@ nav.sticky {
   font-size: 0.63rem; letter-spacing: 0.18em;
   text-transform: uppercase; color: var(--muted); margin-top: 0.4rem;
 }
-.about p { font-size: 0.94rem; line-height: 2.1; color: var(--muted); margin-bottom: 1.5rem; }
+.about p {
+  font-size: 0.94rem; line-height: 2.1; margin-bottom: 1.5rem;
+  color: #ff9eb5;
+  text-shadow:
+    0 0 6px rgba(255, 105, 155, 0.9),
+    0 0 14px rgba(255, 105, 155, 0.7),
+    0 0 30px rgba(255, 105, 155, 0.5),
+    0 0 55px rgba(255, 80, 130, 0.3);
+}
 
 /* ============================================================
    MENU
