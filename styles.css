@@ -381,12 +381,7 @@ nav.sticky {
   position: relative; z-index: 1;
   background: var(--cream);
 }
-.about::after {
-  content: '';
-  position: absolute; right: 0; top: 0; bottom: 0; width: 42%;
-  background: linear-gradient(to left, var(--silk), transparent);
-  pointer-events: none;
-}
+
 
 .stat-row {
   display: grid; grid-template-columns: repeat(3,1fr);
